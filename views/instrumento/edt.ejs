@@ -1,0 +1,62 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Editar Instrumento</h3>
+      </header>
+      <div class="content">
+        <form id="form-instrumento" autocomplete="off" method="post">
+          <div class="grid">
+            <div>
+              <label for="id">ID</label>
+              <input id="id" name="id" type="text" value="<%=instrumento.id%>" readonly required>
+            </div>
+            
+            <div>
+              <label for="nome">Nome do Instrumento</label>
+              <input id="nome" name="nome" type="text" placeholder="Ex: Violão Clássico" 
+              value="<%=instrumento.nome%>" required>
+            </div>
+            
+            <div>
+              <label for="familia">Família</label>
+              <select id="familia" name="familia" required>
+                <option value="" disabled selected>Selecione a Família do Instrumento</option>
+                <option>Metais</option>
+                <option>Madeiras</option>
+                <option>Cordas</option>
+                <option>Percussão</option>
+              </select>
+            </div>
+            
+             <div>
+              <label for="fabricante">Fabricante</label>
+              <select id="fabricante" name="fabricante" required>
+                <option value="" disabled selected>Selecione a Fabricante do Instrumento</option>
+                <option>Yamaha</option>
+                <option>Cassio</option>
+                <option>Adams</option>
+                <option>Fender</option>
+                <option>Gibson</option>
+                <option>Tajima</option>
+                <option>Giannini</option>
+                <option>Mapex</option>
+              </select>
+            </div>
+
+          <div>
+              <label for="data_fabricacao">Data de Fabricação</label>
+              <input id="data_fabricacao" name="data_fabricacao" type="date" required>
+            </div>
+
+            <div>
+              <label for="preco">Preço (R$)</label>
+              <input id="preco" name="preco" type="number" placeholder="0,00" min="0" step="0.01" required>
+            </div>
+          
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/instrumento/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Salvar</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>

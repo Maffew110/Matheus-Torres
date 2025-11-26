@@ -1,0 +1,32 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Adicionar Nova Finança</h3>
+      </header>
+      <div class="content">
+        <form id="form-instrumento" method="post" autocomplete="off" action="/financas/add/ok">
+          <div class="grid">
+
+            <div>
+                <label for="valor_atual_caixa">Valor Atual do Caixa</label>
+                <input id="valor_atual_caixa" name="valor_atual_caixa" type="text" placeholder="Ex: 5000,00" required>
+            </div>
+
+            <div>
+              <label for="valor_movimentado">Valor Movimentado</label>
+              <input id="valor_movimentado" name="valor_movimentado" type="text" placeholder="Ex: 1000,00" required>
+            </div>
+
+            <div>
+              <label for="data_movimentacao">Data da Movimentação</label>
+              <input id="data_movimentacao" name="data_movimentacao" type="date" required>
+            </div>
+
+           <div class="field-help">Os campos com * são obrigatórios.</div>
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/financas/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Adicionar Finança</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>
