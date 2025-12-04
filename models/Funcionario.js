@@ -1,6 +1,6 @@
 import conexao from "../config/conexao.js";
 
-const FuncionarioSchema = conexao.Schema({
+const FuncionarioSchema = new conexao.Schema({
     nome:{type:String, required:true},
     cpf:{type:String, required:true},
     data_inicio:{type:Date, required:true},

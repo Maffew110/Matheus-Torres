@@ -1,6 +1,6 @@
 import conexao from "../config/conexao.js";
 
-const InstrumentoSchema = conexao.Schema({
+const InstrumentoSchema = new conexao.Schema({
     nome:{type:String, required:true},
     familia:{type:String},
     fabricante:{type:String},

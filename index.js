@@ -47,7 +47,7 @@ app.post('/instrumento/lst', async (req, res) => {
     res.render("instrumento/lst", {instrumentos:instrumentos})
 })
 
-app.post('/instrumento/add/ok', upload.single(foto), async (req, res) => {
+app.post('/instrumento/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
     Instrumento.create({
         nome:req.body.nome,
@@ -221,4 +221,9 @@ app.get('/financas/del/:id', async (req, res) => {
     res.redirect("/financas/lst")
 })
 
+app.get('/site', (req, res) => {
+    res.render("site/index")
+})
+
 app.listen(3001)
+console.log('Servidor rodando na porta 3001  http://localhost:3001')
