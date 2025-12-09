@@ -6,6 +6,10 @@
     <form id="form-instrumento" autocomplete="off" action="/instrumento/add/ok" method="post" enctype="multipart/form-data">
       <div class="grid">
         <div>
+          <label for="foto">Foto do Instrumento</label>
+          <input id="foto" name="foto" type="file" required>
+        </div>
+        <div>
           <label for="nome">Nome do Instrumento</label>
           <input id="nome" name="nome" type="text" placeholder="Ex: Violão Clássico" required>
         </div>
@@ -18,11 +22,6 @@
             <option>Cordas</option>
             <option>Percussão</option>
           </select>
-        </div>
-
-        <div>
-          <label for="foto">Foto</label>
-          <input id="foto" name="foto" type="file">
         </div>
 
         <div>

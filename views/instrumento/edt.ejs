@@ -9,7 +9,16 @@
               <label for="id">ID</label>
               <input id="id" name="id" type="text" value="<%=instrumento.id%>" readonly required>
             </div>
-            
+            <div>
+              <label for="foto">Foto do Instrumento</label>
+              <input id="foto" name="foto" type="file">
+              <% if (instrumento.foto) { %>
+                <div style="margin-top: 10px;">
+                  <p>Foto atual:</p>
+                  <img src="<%= instrumento.foto %>" alt="Foto do Instrumento" style="max-width: 300px; max-height: 200px; border-radius: 8px; margin-top: 8px;" />
+                </div>
+              <% } %>
+            </div>
             <div>
               <label for="nome">Nome do Instrumento</label>
               <input id="nome" name="nome" type="text" placeholder="Ex: Violão Clássico" 

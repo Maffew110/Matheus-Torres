@@ -30,26 +30,29 @@ app.get('/', (req, res) => {
 })
 
 app.get('/instrumento/lst', async (req, res) => {
-    //busca os instrumentos no banco de dados
-    const instrumentos = await Instrumento.find()
-    res.render("instrumento/lst", {instrumentos:instrumentos})
-})
+  const q = req.query.q || "";
+    const isNumber = !isNaN(q);
 
-//vem do form de pesquisa
-app.post('/instrumento/lst', async (req, res) => {
-    //busca os instrumentos no banco de dados
-    const pesquisa = req.body.pesquisa
-    const instrumentos = await Instrumento.find(
-        {nome:{$regex:pesquisa, 
-            $options: "i"
-        }}
-    )
-    res.render("instrumento/lst", {instrumentos:instrumentos})
-})
+    const query = {
+        $or: [
+            { nome: { $regex: q, $options: "i" } },
+            { familia: { $regex: q, $options: "i" } },
+            { fabricante: { $regex: q, $options: "i" } },
+        ]
+    };
+
+    if (isNumber && q.trim() !== "") {
+        query.$or.push({ preco: Number(q) });
+    }
+
+    const instrumentoDocs = await Instrumento.find(query);
+    const instrumento = instrumentoDocs.map(doc => doc.toObject({ getters: true }));
+    res.render("instrumento/lst", {instrumento, q });
+});
 
 app.post('/instrumento/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
-    Instrumento.create({
+    await Instrumento.create({
         nome:req.body.nome,
         familia:req.body.familia,
         fabricante:req.body.fabricante,
@@ -57,23 +60,30 @@ app.post('/instrumento/add/ok', upload.single('foto'), async (req, res) => {
         preco:req.body.preco,
         foto:req.file.buffer
     })
-    res.render("instrumento/addok")
+    res.render("instrumento/addok");
 })
 
 app.get('/instrumento/add', (req, res) => {
     res.render("instrumento/add")
 })
 
-app.post('/instrumento/edt/:id', async (req, res) => {
-    const id = req.params.id
-    await Instrumento.findByIdAndUpdate(id, req.body)
+app.post('/instrumento/edt/:id', upload.single('foto'), async (req, res) => {
+    const updateData ={
+        nome: req.body.nome,
+        familia: req.body.familia,
+        fabricante: req.body.fabricante,
+        data_fabricacao: req.body.data_fabricacao,
+        preco: req.body.preco,
+        foto: req.file ? req.file.buffer:undefined
+    };
+    await Instrumento.findByIdAndUpdate(req.params.id, updateData);
     res.render("instrumento/edtok")
 })
 
 app.get('/instrumento/edt/:id', async (req, res) => {
-    const id = req.params.id
-    const instrumento = await Instrumento.findById(id)
-    res.render("instrumento/edt", {instrumento})
+    const instrumentoDoc = await Instrumento.findById(req.params.id);
+    const instrumento = await Instrumento.findById(req.params.id);
+    res.render("instrumento/edt", {instrumento});
 })
 
 
@@ -101,9 +111,16 @@ app.post('/funcionarios/lst', async (req, res) => {
     res.render("funcionarios/lst", {funcionarios:funcionarios})
 })
 
-app.post('/funcionarios/add/ok', async (req, res) => {
+app.post('/funcionarios/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
-    await Funcionario.create(req.body)
+    await Funcionario.create ({
+        nome: req.body.nome,
+        cpf: req.body.cpf,
+        data_inicio: req.body.data_inicio,
+        data_fim: req.body.data_fim,
+        salario: req.body.salario,
+        foto: req.file.buffer
+    });
     res.render("funcionarios/addok")
 })
 
@@ -111,16 +128,22 @@ app.get('/funcionarios/add', (req, res) => {
     res.render("funcionarios/add")
 })
 
-app.post('/funcionarios/edt/:id', async (req, res) => {
-    const id = req.params.id
-    await Funcionario.findByIdAndUpdate(id, req.body)
+app.post('/funcionarios/edt/:id', upload.single('foto'), async (req, res) => {
+     const updateData ={
+        nome: req.body.nome,
+        cpf: req.body.cpf,
+        data_inicio: req.body.data_inicio,
+        data_fim: req.body.data_fim,
+        salario: req.body.salario,
+        foto: req.file ? req.file.buffer:undefined
+    };
+    await Funcionario.findByIdAndUpdate(req.params.id, updateData)
     res.render("funcionarios/edtok")
 })
 
 app.get('/funcionarios/edt/:id', async (req, res) => {
-    const id = req.params.id
-    const funcionarios = await Funcionario.findById(id)
-    res.render("funcionarios/edt", {funcionarios})
+    const funcionarios = await Funcionario.findById(req.params.id)
+    res.render("funcionarios/edt", {funcionarios});
 })
 
 app.get('/funcionarios/del/:id', async (req, res) => {

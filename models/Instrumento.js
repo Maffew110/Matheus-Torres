@@ -6,8 +6,10 @@ const InstrumentoSchema = new conexao.Schema({
     fabricante:{type:String},
     data_fabricacao:{type:Date},
     preco:{type:Number},
-    foto:{type:Buffer}
-
+    foto:{type:Buffer, get: (valor)=>{
+        if (!valor) return null;
+            return `data:image/png;base64,${valor.toString('base64')}`;
+    }}
 })
 const Instrumento = conexao.model("Instrumento", InstrumentoSchema);
 

@@ -3,8 +3,12 @@
         <h3>Adicionar Novo Funcionário</h3>
       </header>
       <div class="content">
-        <form id="form-instrumento" method="post" autocomplete="off" action="/funcionarios/add/ok">
+        <form id="form-instrumento" method="post" autocomplete="off" action="/funcionarios/add/ok" enctype="multipart/form-data">
           <div class="grid">
+            <div>
+              <label for="foto">Foto do Funcionário</label>
+              <input id="foto" name="foto" type="file" required>
+            </div>
             <div>
               <label for="nome">Nome do Funcionário</label>
               <input id="nome" name="nome" type="text" placeholder="Ex: João Silva" required>

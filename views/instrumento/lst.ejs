@@ -17,8 +17,8 @@
 
     <!--Formulário de pesquisa-->
     <div style="flex: 0 0 auto; width: 70%;">
-      <form action="/instrumento/lst" method="post">
-        <input type="text" name="pesquisa" id="pesquisa" placeholder="Digite a pesquisa aqui">
+      <form action="/instrumento/lst" method="get" class="search-bar" enctype="multipart/form-data">
+        <input type="text" name="q" value="<%= q%>" placeholder="Digite a pesquisa aqui">
         <button type="submit" class="icon-btn" title="Pesquisar" aria-label="Pesquisar">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -34,6 +34,7 @@
       <table>
         <thead>
           <tr>
+            <th>Foto</th>
             <th>Nome</th>
             <th>Família</th>
             <th>Fabricante</th>
@@ -43,9 +44,15 @@
           </tr>
         </thead>
         <tbody>
-          <% if (instrumentos && instrumentos.length) { %>
-            <% instrumentos.forEach(instrumento=> { %>
+            <% instrumento.forEach(instrumento=> { %>
               <tr>
+                <td>
+                  <% if (instrumento.foto) { %>
+                    <img src="<%= instrumento.foto%>" alt="Foto do Instrumento" class="table-img" width="200" height = "150"/>
+                <%} else {%>
+                  <span>N/A</span>
+                <%} %>
+                </td>
                 <td>
                   <%= instrumento.nome %>
                 </td>
@@ -83,11 +90,6 @@
                 </td>
               </tr>
               <% }) %>
-                <% } else { %>
-                  <tr>
-                    <td colspan="6">Nenhum instrumento encontrado.</td>
-                  </tr>
-                  <% } %>
         </tbody>
       </table>
     </div>
