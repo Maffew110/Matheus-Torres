@@ -56,13 +56,14 @@ app.post('/instrumento/lst', async (req, res) => {
 
 app.post('/instrumento/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
-    Instrumento.create({
+    const fotoData = req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null;
+    await Instrumento.create({
         nome:req.body.nome,
         familia:req.body.familia,
         fabricante:req.body.fabricante,
         data_fabricacao:req.body.data_fabricacao,
         preco:req.body.preco,
-        foto:req.file.buffer
+        foto: fotoData
     })
     res.render("instrumento/addok")
 })
@@ -108,9 +109,10 @@ app.post('/funcionarios/lst', async (req, res) => {
     res.render("funcionarios/lst", {funcionarios:funcionarios})
 })
 
-app.post('/funcionarios/add/ok', async (req, res) => {
+app.post('/funcionarios/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
-    await Funcionario.create(req.body)
+    const fotoData = req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null;
+    await Funcionario.create({ ...req.body, foto: fotoData })
     res.render("funcionarios/addok")
 })
 
@@ -118,9 +120,13 @@ app.get('/funcionarios/add', (req, res) => {
     res.render("funcionarios/add")
 })
 
-app.post('/funcionarios/edt/:id', async (req, res) => {
+app.post('/funcionarios/edt/:id', upload.single('foto'), async (req, res) => {
     const id = req.params.id
-    await Funcionario.findByIdAndUpdate(id, req.body)
+    const updateData = { ...req.body }
+    if (req.file) {
+        updateData.foto = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+    }
+    await Funcionario.findByIdAndUpdate(id, updateData)
     res.render("funcionarios/edtok")
 })
 

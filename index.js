@@ -46,19 +46,20 @@ app.get('/instrumento/lst', async (req, res) => {
     }
 
     const instrumentoDocs = await Instrumento.find(query);
-    const instrumento = instrumentoDocs.map(doc => doc.toObject({ getters: true }));
-    res.render("instrumento/lst", {instrumento, q });
+    const instrumentos = instrumentoDocs.map(doc => doc.toObject({ getters: true }));
+    res.render("instrumento/lst", { instrumentos, q });
 });
 
 app.post('/instrumento/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
+    const fotoData = req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null;
     await Instrumento.create({
         nome:req.body.nome,
         familia:req.body.familia,
         fabricante:req.body.fabricante,
         data_fabricacao:req.body.data_fabricacao,
         preco:req.body.preco,
-        foto:req.file.buffer
+        foto: fotoData
     })
     res.render("instrumento/addok");
 })
@@ -73,9 +74,11 @@ app.post('/instrumento/edt/:id', upload.single('foto'), async (req, res) => {
         familia: req.body.familia,
         fabricante: req.body.fabricante,
         data_fabricacao: req.body.data_fabricacao,
-        preco: req.body.preco,
-        foto: req.file ? req.file.buffer:undefined
+        preco: req.body.preco
     };
+    if (req.file) {
+        updateData.foto = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
     await Instrumento.findByIdAndUpdate(req.params.id, updateData);
     res.render("instrumento/edtok")
 })
@@ -113,13 +116,14 @@ app.post('/funcionarios/lst', async (req, res) => {
 
 app.post('/funcionarios/add/ok', upload.single('foto'), async (req, res) => {
     //grava no banco
+    const fotoData = req.file ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` : null;
     await Funcionario.create ({
         nome: req.body.nome,
         cpf: req.body.cpf,
         data_inicio: req.body.data_inicio,
         data_fim: req.body.data_fim,
         salario: req.body.salario,
-        foto: req.file.buffer
+        foto: fotoData
     });
     res.render("funcionarios/addok")
 })
@@ -134,9 +138,11 @@ app.post('/funcionarios/edt/:id', upload.single('foto'), async (req, res) => {
         cpf: req.body.cpf,
         data_inicio: req.body.data_inicio,
         data_fim: req.body.data_fim,
-        salario: req.body.salario,
-        foto: req.file ? req.file.buffer:undefined
+        salario: req.body.salario
     };
+    if (req.file) {
+        updateData.foto = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
     await Funcionario.findByIdAndUpdate(req.params.id, updateData)
     res.render("funcionarios/edtok")
 })
@@ -244,8 +250,17 @@ app.get('/financas/del/:id', async (req, res) => {
     res.redirect("/financas/lst")
 })
 
-app.get('/site', (req, res) => {
-    res.render("site/index")
+app.get('/site', async (req, res) => {
+    // Carregar dados do banco de dados
+    const instrumentos = await Instrumento.find().lean();
+    const funcionarios = await Funcionario.find().lean();
+    const clientes = await Cliente.find().lean();
+
+    res.render("site/index", {
+      instrumentos,
+      funcionarios,
+      clientes,
+    });
 })
 
 app.listen(3001)

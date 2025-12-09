@@ -6,10 +6,8 @@ const FuncionarioSchema = new conexao.Schema({
     data_inicio:{type:Date, required:true},
     data_fim:{type:Date, required:true},
     salario:{type:Number, required:true},
-    foto:{type:Buffer, get: (valor)=>{
-        if (!valor) return null;
-            return `data:image/png;base64,${valor.toString('base64')}`;
-    }}
+    // Armazenamos a imagem já como data URL (string)
+    foto:{type:String}
 })
 
 const Funcionario = conexao.model("Funcionario", FuncionarioSchema);
